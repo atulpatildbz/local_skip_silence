@@ -46,7 +46,7 @@ function App() {
     //start the loop from variable i. Set the variable i to j whenever a match is found, so that we don't have to loop from the beginning next time
     for (let j = i; j < timestampStrings.length; j++) {
       //get the obj from timestamp strings
-      let obj = parseTimestamps(timestampStrings[j]);
+      let obj = parseTimestamps(timestampStrings[j].trim());
 
       //if played is ahead of current timestamp's start and end, then move to next timestamp
       if (playedMillis > obj.start - 50 && playedMillis > obj.end) {
