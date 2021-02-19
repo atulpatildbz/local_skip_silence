@@ -93,6 +93,7 @@ function App() {
           onChange={(e) => {
             setSilentSpeed(parseFloat(e.target.value));
           }}
+          placeholder={silentSpeed}
         ></input>
         <label>Dialogue speed: </label>
         <input
@@ -101,6 +102,7 @@ function App() {
           onChange={(e) => {
             setDialogueSpeed(parseFloat(e.target.value));
           }}
+          placeholder={dialogueSpeed}
         ></input>
       </div>
       <ReactPlayer
