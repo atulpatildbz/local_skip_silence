@@ -9,6 +9,7 @@ function App() {
   const [silentSpeed, setSilentSpeed] = useState(1.4);
   const [dialogueSpeed, setDialogueSpeed] = useState(3.5);
   const [varForSeek, setVarForSeek] = useState(0);
+  const [syncInterval, setSyncInterval] = useState(30);
 
   const handleVideoUpload = (event) => {
     setVideoPath(URL.createObjectURL(event.target.files[0]));
@@ -35,9 +36,9 @@ function App() {
   const onProgress = ({ playedSeconds }) => {
     //after changing speed back and forth, the audio video gets out of sync
     //this is one annoying way of syncting audio and video.
-    if (parseInt(playedSeconds / 50) !== varForSeek) {
+    if (parseInt(playedSeconds / syncInterval) !== varForSeek) {
       player_ref.seekTo(playedSeconds);
-      setVarForSeek(parseInt(playedSeconds / 50));
+      setVarForSeek(parseInt(playedSeconds / syncInterval));
       console.log("syncting audio and video");
     }
     // convert seconds to millis
@@ -73,37 +74,50 @@ function App() {
 
   return (
     <div>
-      <div>
-        <label for="video-file">Choose a video: </label>
-        <input type="file" onChange={handleVideoUpload} name="video-file" />
-      </div>
-      <div>
-        <label for="video-file">Choose subtitle : </label>
-        <input
-          type="file"
-          onChange={handleSubtitleUpload}
-          name="subtitle-file"
-        />
-      </div>
-      <div>
-        <label>Silent speed: </label>
-        <input
-          type="number"
-          name="silent-speed"
-          onChange={(e) => {
-            setSilentSpeed(parseFloat(e.target.value));
-          }}
-          placeholder={silentSpeed}
-        ></input>
-        <label>Dialogue speed: </label>
-        <input
-          type="number"
-          name="dialog-speed"
-          onChange={(e) => {
-            setDialogueSpeed(parseFloat(e.target.value));
-          }}
-          placeholder={dialogueSpeed}
-        ></input>
+      <div className="options-container">
+        <div>
+          <label for="video-file">Choose a video: </label>
+          <input type="file" onChange={handleVideoUpload} name="video-file" />
+        </div>
+        <div>
+          <label for="video-file">Choose subtitle : </label>
+          <input
+            type="file"
+            onChange={handleSubtitleUpload}
+            name="subtitle-file"
+          />
+        </div>
+        <div>
+          <label>Silent speed: </label>
+          <input
+            type="number"
+            name="silent-speed"
+            onChange={(e) => {
+              setSilentSpeed(parseFloat(e.target.value));
+            }}
+            placeholder={silentSpeed}
+          ></input>
+          <label>Dialogue speed: </label>
+          <input
+            type="number"
+            name="dialog-speed"
+            onChange={(e) => {
+              setDialogueSpeed(parseFloat(e.target.value));
+            }}
+            placeholder={dialogueSpeed}
+          ></input>
+        </div>
+        <div>
+          <label>Sync interval</label>
+          <input
+            type="number"
+            name="sync-interval"
+            onChange={(e) => {
+              setSyncInterval(parseFloat(e.target.value));
+            }}
+            placeholder={syncInterval}
+          ></input>
+        </div>
       </div>
       <ReactPlayer
         ref={ref}
