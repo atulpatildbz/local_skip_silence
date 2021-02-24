@@ -82,7 +82,7 @@ function App() {
 
   return (
     <div>
-      {(!videoFilePath || timestampStrings === []) && (
+      {(!videoFilePath || timestampStrings.length === 0) && (
         <div className="options-container">
           <div>
             <label for="video-file">Choose a video: </label>
@@ -144,7 +144,7 @@ function App() {
           playing={playing}
         />
       </div>
-      {videoFilePath && timestampStrings !== [] && (
+      {videoFilePath && timestampStrings.length !== 0 && (
         <div>
           <button
             onClick={() => {
