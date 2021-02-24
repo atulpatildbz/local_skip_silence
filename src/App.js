@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { parseTimestamps } from "subtitle";
 import ReactPlayer from "react-player";
+import "./App.css";
 
 function App() {
   const [videoFilePath, setVideoPath] = useState(null);
@@ -119,16 +120,18 @@ function App() {
           ></input>
         </div>
       </div>
-      <ReactPlayer
-        ref={ref}
-        url={videoFilePath}
-        width="70%"
-        height="50%"
-        controls={true}
-        playbackRate={playbackRate}
-        onProgress={onProgress}
-        progressInterval={10}
-      />
+      <div className="player-container">
+        <ReactPlayer
+          ref={ref}
+          url={videoFilePath}
+          width="100%"
+          height="100%"
+          controls={true}
+          playbackRate={playbackRate}
+          onProgress={onProgress}
+          progressInterval={10}
+        />
+      </div>
     </div>
   );
 }
