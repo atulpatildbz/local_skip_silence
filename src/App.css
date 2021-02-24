@@ -1,3 +1,8 @@
+.options-container {
+    display: flex;
+    flex-wrap: wrap;
+}
 .player-container {
-    height: 90vh;
+    /* options - 24.6 , controls - 24.6  */
+    height: calc(100vh - 49.2px);
 }

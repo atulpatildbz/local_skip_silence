@@ -1,6 +1,6 @@
 * {
-    background: black;
-    color: white;
+    color: #ff7029;
+    background: #2f2f2b;
 }
 
 body {
@@ -17,7 +17,3 @@ code {
     monospace;
 }
 
-.options-container {
-    display: flex;
-    flex-wrap: wrap;
-}

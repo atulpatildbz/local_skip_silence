@@ -11,6 +11,8 @@ function App() {
   const [dialogueSpeed, setDialogueSpeed] = useState(3.5);
   const [varForSeek, setVarForSeek] = useState(0);
   const [syncInterval, setSyncInterval] = useState(30);
+  const [playing, setPlaying] = useState(false);
+  const [showControls, setShowControls] = useState(false);
 
   const handleVideoUpload = (event) => {
     setVideoPath(URL.createObjectURL(event.target.files[0]));
@@ -19,6 +21,11 @@ function App() {
   let fileReader,
     i = 0,
     player_ref;
+
+  const resetVideoAndSubtitle = () => {
+    setVideoPath(null);
+    setTimestampStrings([]);
+  };
 
   const handleFileRead = (e) => {
     const content = fileReader.result;
@@ -75,19 +82,23 @@ function App() {
 
   return (
     <div>
+      {(!videoFilePath || timestampStrings === []) && (
+        <div className="options-container">
+          <div>
+            <label for="video-file">Choose a video: </label>
+            <input type="file" onChange={handleVideoUpload} name="video-file" />
+          </div>
+          <div>
+            <label for="video-file">Choose subtitle : </label>
+            <input
+              type="file"
+              onChange={handleSubtitleUpload}
+              name="subtitle-file"
+            />
+          </div>
+        </div>
+      )}
       <div className="options-container">
-        <div>
-          <label for="video-file">Choose a video: </label>
-          <input type="file" onChange={handleVideoUpload} name="video-file" />
-        </div>
-        <div>
-          <label for="video-file">Choose subtitle : </label>
-          <input
-            type="file"
-            onChange={handleSubtitleUpload}
-            name="subtitle-file"
-          />
-        </div>
         <div>
           <label>Silent speed: </label>
           <input
@@ -126,12 +137,39 @@ function App() {
           url={videoFilePath}
           width="100%"
           height="100%"
-          controls={true}
+          controls={showControls}
           playbackRate={playbackRate}
           onProgress={onProgress}
           progressInterval={10}
+          playing={playing}
         />
       </div>
+      {videoFilePath && timestampStrings !== [] && (
+        <div>
+          <button
+            onClick={() => {
+              setPlaying(true);
+            }}
+          >
+            Play
+          </button>
+          <button
+            onClick={() => {
+              setPlaying(false);
+            }}
+          >
+            Pause
+          </button>
+          <button onClick={resetVideoAndSubtitle}>Stop</button>
+          <button
+            onClick={() => {
+              setShowControls((prevControls) => !prevControls);
+            }}
+          >
+            Toggle controls
+          </button>
+        </div>
+      )}
     </div>
   );
 }
