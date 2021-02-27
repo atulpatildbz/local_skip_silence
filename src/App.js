@@ -4,6 +4,7 @@ import ReactPlayer from "react-player";
 import "./App.css";
 
 function App() {
+  const [usingLocalVideo, setUsingLocalVideo] = useState(true);
   const [videoFilePath, setVideoPath] = useState(null);
   const [playbackRate, setPlaybackRate] = React.useState(1);
   const [timestampStrings, setTimestampStrings] = useState([]);
@@ -16,6 +17,10 @@ function App() {
 
   const handleVideoUpload = (event) => {
     setVideoPath(URL.createObjectURL(event.target.files[0]));
+  };
+
+  const handleVideoURLChange = (event) => {
+    setVideoPath(event.target.value);
   };
 
   let fileReader,
@@ -86,7 +91,22 @@ function App() {
         <div className="options-container">
           <div>
             <label for="video-file">Choose a video: </label>
-            <input type="file" onChange={handleVideoUpload} name="video-file" />
+            <button
+              onClick={() => {
+                setUsingLocalVideo((val) => !val);
+              }}
+            >
+              {usingLocalVideo ? "Local" : "URL"}
+            </button>
+            {usingLocalVideo ? (
+              <input
+                type="file"
+                onChange={handleVideoUpload}
+                name="video-file"
+              />
+            ) : (
+              <input onChange={handleVideoURLChange} />
+            )}
           </div>
           <div>
             <label for="video-file">Choose subtitle : </label>
