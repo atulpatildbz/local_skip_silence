@@ -120,7 +120,7 @@ function App() {
       )}
       <div className="options-container">
         <div>
-          <label>Silent speed: </label>
+          <label>Dialogue speed: </label>
           <input
             type="number"
             name="silent-speed"
@@ -129,7 +129,7 @@ function App() {
             }}
             placeholder={silentSpeed}
           ></input>
-          <label>Dialogue speed: </label>
+          <label>Silent speed: </label>
           <input
             type="number"
             name="dialog-speed"
@@ -166,20 +166,24 @@ function App() {
       </div>
       {videoFilePath && timestampStrings.length !== 0 && (
         <div>
-          <button
-            onClick={() => {
-              setPlaying(true);
-            }}
-          >
-            Play
-          </button>
-          <button
-            onClick={() => {
-              setPlaying(false);
-            }}
-          >
-            Pause
-          </button>
+          {!playing && (
+            <button
+              onClick={() => {
+                setPlaying(true);
+              }}
+            >
+              Play
+            </button>
+          )}
+          {playing && (
+            <button
+              onClick={() => {
+                setPlaying(false);
+              }}
+            >
+              Pause
+            </button>
+          )}
           <button onClick={resetVideoAndSubtitle}>Stop</button>
           <button
             onClick={() => {
