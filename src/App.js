@@ -58,9 +58,6 @@ function App() {
         }
       }
     }
-    // const timestamp_content = content
-    //   .split("\n")
-    //   .filter((line) => line.includes("-->"));
     setTimestampStrings(timestamp_content);
     setSubtitleWords(words_content);
   };
