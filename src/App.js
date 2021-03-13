@@ -13,6 +13,9 @@ function App() {
   const [videoFilePath, setVideoPath] = useState(null);
   const [playbackRate, setPlaybackRate] = React.useState(1);
   const [timestampStrings, setTimestampStrings] = useState([]);
+  const [subtitleWords, setSubtitleWords] = useState([]);
+  const [currentSubtitle, setCurrentSubtitle] = useState("");
+  const [showSubtitles, setShowSubtitles] = useState(true);
   const [dialogueSpeed, setDialogueSpeed] = useState(DEFAULT_DIALOGUE_SPEED);
   const [silenceSpeed, setSilenceSpeed] = useState(DEFAULT_SILENCE_SPEED);
   const [varForSeek, setVarForSeek] = useState(0);
@@ -38,11 +41,28 @@ function App() {
   };
 
   const handleFileRead = (e) => {
-    const content = fileReader.result;
-    const timestamp_content = content
-      .split("\n")
-      .filter((line) => line.includes("-->"));
+    const content = fileReader.result.split("\n");
+    const timestamp_content = [];
+    const words_content = [];
+    for (let i = 0; i < content.length; i++) {
+      if (content[i].includes("-->")) {
+        timestamp_content.push(content[i]);
+        let temp_content = [];
+        for (let j = i + 1; i < content.length; j++) {
+          if (content[j][1]) {
+            temp_content.push(content[j]);
+          } else {
+            words_content.push(temp_content.join(". "));
+            break;
+          }
+        }
+      }
+    }
+    // const timestamp_content = content
+    //   .split("\n")
+    //   .filter((line) => line.includes("-->"));
     setTimestampStrings(timestamp_content);
+    setSubtitleWords(words_content);
   };
 
   const handleSubtitleUpload = (event) => {
@@ -74,12 +94,14 @@ function App() {
       // if played is less than current timestamp's start, then the part is silent, speed up
       else if (playedMillis < obj.start - 50) {
         setPlaybackRate(silenceSpeed);
+        setCurrentSubtitle("");
         // i = j;
         break;
       }
       // if played is between timestamps start and end, someone is speaking, slow down
       else if (playedMillis > obj.start - 50 && playedMillis < obj.end) {
         setPlaybackRate(dialogueSpeed);
+        setCurrentSubtitle(subtitleWords[j]);
         // i = j;
         break;
       }
@@ -93,13 +115,13 @@ function App() {
   const handleOptionsInputChange = (e) => {
     switch (e.target.name) {
       case "dialogue-speed":
-        setDialogueSpeed(e.target.value || DEFAULT_DIALOGUE_SPEED);
+        setDialogueSpeed(parseFloat(e.target.value) || DEFAULT_DIALOGUE_SPEED);
         break;
       case "silence-speed":
-        setSilenceSpeed(e.target.value || DEFAULT_SILENCE_SPEED);
+        setSilenceSpeed(parseFloat(e.target.value) || DEFAULT_SILENCE_SPEED);
         break;
       case "sync-interval":
-        setSyncInterval(e.target.value || DEFAULT_SYNC_INTERVAL);
+        setSyncInterval(parseFloat(e.target.value) || DEFAULT_SYNC_INTERVAL);
         break;
       default:
         return;
@@ -166,7 +188,11 @@ function App() {
           ></input>
         </div>
       </div>
-      <div className="player-container">
+      <div
+        className={
+          showSubtitles ? "player-container-with-subtitle" : "player-container"
+        }
+      >
         <ReactPlayer
           ref={ref}
           url={videoFilePath}
@@ -179,6 +205,9 @@ function App() {
           playing={playing}
         />
       </div>
+      {showSubtitles && (
+        <div className="subtitle-container">{currentSubtitle}</div>
+      )}
       {videoFilePath && timestampStrings.length !== 0 && (
         <div>
           {!playing && (
@@ -206,6 +235,13 @@ function App() {
             }}
           >
             Toggle controls
+          </button>
+          <button
+            onClick={() => {
+              setShowSubtitles((prev) => !prev);
+            }}
+          >
+            {showSubtitles ? "Hide" : "Show"} subtitles
           </button>
         </div>
       )}

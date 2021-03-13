@@ -6,3 +6,12 @@
     /* options - 24.6 , controls - 24.6  */
     height: calc(100vh - 49.2px);
 }
+.player-container-with-subtitle {
+    height: calc(100vh - 49.2px - 24.6px);
+}
+
+.subtitle-container {
+    min-height: 24.6px;
+    display: flex;
+    justify-content: center;
+}
