@@ -133,7 +133,7 @@ function App() {
       {(!videoFilePath || timestampStrings.length === 0) && (
         <div className="options-container">
           <div>
-            <label for="video-file">Choose a video: </label>
+            <label htmlFor="video-file">Choose a video: </label>
             <button
               onClick={() => {
                 setUsingLocalVideo((val) => !val);
@@ -152,7 +152,7 @@ function App() {
             )}
           </div>
           <div>
-            <label for="video-file">Choose subtitle : </label>
+            <label htmlFor="subtitle-file">Choose subtitle : </label>
             <input
               type="file"
               onChange={handleSubtitleUpload}
