@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { parseTimestamps } from "subtitle";
 import ReactPlayer from "react-player";
 import "./App.css";
-import { DEFAULT_DIALOGUE_SPEED, DEFAULT_SILENCE_SPEED } from "./constants";
+import {
+  DEFAULT_DIALOGUE_SPEED,
+  DEFAULT_SILENCE_SPEED,
+  DEFAULT_SYNC_INTERVAL,
+} from "./constants";
 
 function App() {
   const [usingLocalVideo, setUsingLocalVideo] = useState(true);
@@ -12,7 +16,7 @@ function App() {
   const [dialogueSpeed, setDialogueSpeed] = useState(DEFAULT_DIALOGUE_SPEED);
   const [silenceSpeed, setSilenceSpeed] = useState(DEFAULT_SILENCE_SPEED);
   const [varForSeek, setVarForSeek] = useState(0);
-  const [syncInterval, setSyncInterval] = useState(30);
+  const [syncInterval, setSyncInterval] = useState(DEFAULT_SYNC_INTERVAL);
   const [playing, setPlaying] = useState(false);
   const [showControls, setShowControls] = useState(false);
 
