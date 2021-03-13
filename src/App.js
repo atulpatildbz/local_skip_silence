@@ -90,6 +90,22 @@ function App() {
     player_ref = player;
   };
 
+  const handleOptionsInputChange = (e) => {
+    switch (e.target.name) {
+      case "dialogue-speed":
+        setDialogueSpeed(e.target.value || DEFAULT_DIALOGUE_SPEED);
+        break;
+      case "silence-speed":
+        setSilenceSpeed(e.target.value || DEFAULT_SILENCE_SPEED);
+        break;
+      case "sync-interval":
+        setSyncInterval(e.target.value || DEFAULT_SYNC_INTERVAL);
+        break;
+      default:
+        return;
+    }
+  };
+
   return (
     <div>
       {(!videoFilePath || timestampStrings.length === 0) && (
@@ -128,30 +144,24 @@ function App() {
           <label>Dialogue speed: </label>
           <input
             type="number"
-            name="silent-speed"
-            onChange={(e) => {
-              setDialogueSpeed(parseFloat(e.target.value));
-            }}
+            name="dialogue-speed"
+            onChange={handleOptionsInputChange}
             placeholder={dialogueSpeed}
           ></input>
-          <label>Silent speed: </label>
+          <label> Silent speed: </label>
           <input
             type="number"
-            name="dialog-speed"
-            onChange={(e) => {
-              setSilenceSpeed(parseFloat(e.target.value));
-            }}
+            name="silence-speed"
+            onChange={handleOptionsInputChange}
             placeholder={silenceSpeed}
           ></input>
         </div>
         <div>
-          <label>Sync interval</label>
+          <label> Sync interval</label>
           <input
             type="number"
             name="sync-interval"
-            onChange={(e) => {
-              setSyncInterval(parseFloat(e.target.value));
-            }}
+            onChange={handleOptionsInputChange}
             placeholder={syncInterval}
           ></input>
         </div>
