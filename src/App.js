@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { parseTimestamps } from "subtitle";
 import ReactPlayer from "react-player";
 import "./App.css";
+import { DEFAULT_DIALOGUE_SPEED, DEFAULT_SILENCE_SPEED } from "./constants";
 
 function App() {
   const [usingLocalVideo, setUsingLocalVideo] = useState(true);
   const [videoFilePath, setVideoPath] = useState(null);
   const [playbackRate, setPlaybackRate] = React.useState(1);
   const [timestampStrings, setTimestampStrings] = useState([]);
-  const [silentSpeed, setSilentSpeed] = useState(1.4);
-  const [dialogueSpeed, setDialogueSpeed] = useState(3.5);
+  const [dialogueSpeed, setDialogueSpeed] = useState(DEFAULT_DIALOGUE_SPEED);
+  const [silenceSpeed, setSilenceSpeed] = useState(DEFAULT_SILENCE_SPEED);
   const [varForSeek, setVarForSeek] = useState(0);
   const [syncInterval, setSyncInterval] = useState(30);
   const [playing, setPlaying] = useState(false);
@@ -68,13 +69,13 @@ function App() {
       }
       // if played is less than current timestamp's start, then the part is silent, speed up
       else if (playedMillis < obj.start - 50) {
-        setPlaybackRate(dialogueSpeed);
+        setPlaybackRate(silenceSpeed);
         // i = j;
         break;
       }
       // if played is between timestamps start and end, someone is speaking, slow down
       else if (playedMillis > obj.start - 50 && playedMillis < obj.end) {
-        setPlaybackRate(silentSpeed);
+        setPlaybackRate(dialogueSpeed);
         // i = j;
         break;
       }
@@ -125,18 +126,18 @@ function App() {
             type="number"
             name="silent-speed"
             onChange={(e) => {
-              setSilentSpeed(parseFloat(e.target.value));
+              setDialogueSpeed(parseFloat(e.target.value));
             }}
-            placeholder={silentSpeed}
+            placeholder={dialogueSpeed}
           ></input>
           <label>Silent speed: </label>
           <input
             type="number"
             name="dialog-speed"
             onChange={(e) => {
-              setDialogueSpeed(parseFloat(e.target.value));
+              setSilenceSpeed(parseFloat(e.target.value));
             }}
-            placeholder={dialogueSpeed}
+            placeholder={silenceSpeed}
           ></input>
         </div>
         <div>
