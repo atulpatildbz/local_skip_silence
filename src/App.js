@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { parseTimestamps } from "subtitle";
 import ReactPlayer from "react-player";
 import "./App.css";
@@ -22,6 +22,32 @@ function App() {
   const [syncInterval, setSyncInterval] = useState(DEFAULT_SYNC_INTERVAL);
   const [playing, setPlaying] = useState(false);
   const [showControls, setShowControls] = useState(false);
+
+  const handleUserKeyPress = useCallback((event) => {
+    const { key, keyCode } = event;
+    if (keyCode === 32) {
+      setPlaying((prevState) => !prevState);
+    } else if (keyCode === 219) {
+      setSilenceSpeed((prevSpeed) => prevSpeed - 0.1);
+    } else if (keyCode === 221) {
+      setSilenceSpeed((prevSpeed) => prevSpeed + 0.1);
+    } else if (keyCode === 186) {
+      setDialogueSpeed((prevSpeed) => prevSpeed - 0.1);
+    } else if (keyCode === 222) {
+      setDialogueSpeed((prevSpeed) => prevSpeed + 0.1);
+    } else if (keyCode === 37) {
+      // setDialogueSpeed((prevSpeed) => prevSpeed - 0.1);
+    } else if (keyCode === 39) {
+      // setDialogueSpeed((prevSpeed) => prevSpeed + 0.1);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleUserKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleUserKeyPress);
+    };
+  }, [handleUserKeyPress]);
 
   const handleVideoUpload = (event) => {
     setVideoPath(URL.createObjectURL(event.target.files[0]));
@@ -165,6 +191,7 @@ function App() {
             type="number"
             name="dialogue-speed"
             onChange={handleOptionsInputChange}
+            value={parseFloat(dialogueSpeed.toFixed(2))}
             placeholder={dialogueSpeed}
           ></input>
           <label> Silent speed: </label>
@@ -172,6 +199,7 @@ function App() {
             type="number"
             name="silence-speed"
             onChange={handleOptionsInputChange}
+            value={parseFloat(silenceSpeed.toFixed(2))}
             placeholder={silenceSpeed}
           ></input>
         </div>
