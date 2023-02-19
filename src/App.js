@@ -2,7 +2,13 @@ import React, { useState, useEffect, useCallback } from "react";
 import { parseTimestamps } from "subtitle";
 import ReactPlayer from "react-player";
 import "./App.css";
-import { DEFAULT_DIALOGUE_SPEED, DEFAULT_SILENCE_SPEED, DEFAULT_SYNC_INTERVAL } from "./constants";
+import {
+  DEFAULT_DIALOGUE_SPEED,
+  DEFAULT_SILENCE_SPEED,
+  DEFAULT_SYNC_INTERVAL,
+  LOOKAHEAD_BUFFER_MILLIS,
+  LOOKBEHIND_BUFFER_MILLIS,
+} from "./constants";
 
 function App() {
   const [usingLocalVideo, setUsingLocalVideo] = useState(true);
@@ -18,6 +24,8 @@ function App() {
   const [syncInterval, setSyncInterval] = useState(DEFAULT_SYNC_INTERVAL);
   const [playing, setPlaying] = useState(false);
   const [showControls, setShowControls] = useState(false);
+  const [lookBehindDuration, setLookBehindDuration] = useState(LOOKBEHIND_BUFFER_MILLIS);
+  const [lookAheadDuration, setLookAheadDuration] = useState(LOOKAHEAD_BUFFER_MILLIS);
 
   const handleUserKeyPress = useCallback((event) => {
     const { key, keyCode } = event;
@@ -107,18 +115,24 @@ function App() {
       let obj = parseTimestamps(timestampStrings[j].trim());
 
       //if played is ahead of current timestamp's start and end, then move to next timestamp
-      if (playedMillis > obj.start - LOOKBEHIND_BUFFER_MILLIS && playedMillis > obj.end) {
+      if (
+        playedMillis > obj.start - lookBehindDuration &&
+        playedMillis > obj.end + lookAheadDuration
+      ) {
         continue;
       }
       // if played is less than current timestamp's start, then the part is silent, speed up
-      else if (playedMillis < obj.start - LOOKBEHIND_BUFFER_MILLIS) {
+      else if (playedMillis < obj.start - lookBehindDuration) {
         setPlaybackRate(silenceSpeed);
         setCurrentSubtitle("");
         // i = j;
         break;
       }
       // if played is between timestamps start and end, someone is speaking, slow down
-      else if (playedMillis > obj.start - LOOKBEHIND_BUFFER_MILLIS && playedMillis < obj.end) {
+      else if (
+        playedMillis > obj.start - lookBehindDuration &&
+        playedMillis < obj.end + lookAheadDuration
+      ) {
         setPlaybackRate(dialogueSpeed);
         setCurrentSubtitle(subtitleWords[j]);
         // i = j;
@@ -141,6 +155,12 @@ function App() {
         break;
       case "sync-interval":
         setSyncInterval(parseFloat(e.target.value) || DEFAULT_SYNC_INTERVAL);
+        break;
+      case "look-behind":
+        setLookBehindDuration(parseFloat(e.target.value) || LOOKBEHIND_BUFFER_MILLIS);
+        break;
+      case "look-ahead":
+        setLookAheadDuration(parseFloat(e.target.value) || LOOKAHEAD_BUFFER_MILLIS);
         break;
       default:
         return;
@@ -198,6 +218,24 @@ function App() {
             name="sync-interval"
             onChange={handleOptionsInputChange}
             placeholder={syncInterval}
+          ></input>
+        </div>
+        <div>
+          <label> Lookbehind</label>
+          <input
+            type="number"
+            name="look-behind"
+            onChange={handleOptionsInputChange}
+            placeholder={lookBehindDuration}
+          ></input>
+        </div>
+        <div>
+          <label> Lookahead</label>
+          <input
+            type="number"
+            name="look-ahead"
+            onChange={handleOptionsInputChange}
+            placeholder={lookAheadDuration}
           ></input>
         </div>
       </div>
