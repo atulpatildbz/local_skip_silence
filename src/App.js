@@ -2,11 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { parseTimestamps } from "subtitle";
 import ReactPlayer from "react-player";
 import "./App.css";
-import {
-  DEFAULT_DIALOGUE_SPEED,
-  DEFAULT_SILENCE_SPEED,
-  DEFAULT_SYNC_INTERVAL,
-} from "./constants";
+import { DEFAULT_DIALOGUE_SPEED, DEFAULT_SILENCE_SPEED, DEFAULT_SYNC_INTERVAL } from "./constants";
 
 function App() {
   const [usingLocalVideo, setUsingLocalVideo] = useState(true);
@@ -165,22 +161,14 @@ function App() {
               {usingLocalVideo ? "Local" : "URL"}
             </button>
             {usingLocalVideo ? (
-              <input
-                type="file"
-                onChange={handleVideoUpload}
-                name="video-file"
-              />
+              <input type="file" onChange={handleVideoUpload} name="video-file" />
             ) : (
               <input onChange={handleVideoURLChange} />
             )}
           </div>
           <div>
             <label htmlFor="subtitle-file">Choose subtitle : </label>
-            <input
-              type="file"
-              onChange={handleSubtitleUpload}
-              name="subtitle-file"
-            />
+            <input type="file" onChange={handleSubtitleUpload} name="subtitle-file" />
           </div>
         </div>
       )}
@@ -213,11 +201,7 @@ function App() {
           ></input>
         </div>
       </div>
-      <div
-        className={
-          showSubtitles ? "player-container-with-subtitle" : "player-container"
-        }
-      >
+      <div className={showSubtitles ? "player-container-with-subtitle" : "player-container"}>
         <ReactPlayer
           ref={ref}
           url={videoFilePath}
@@ -230,9 +214,7 @@ function App() {
           playing={playing}
         />
       </div>
-      {showSubtitles && (
-        <div className="subtitle-container">{currentSubtitle}</div>
-      )}
+      {showSubtitles && <div className="subtitle-container">{currentSubtitle}</div>}
       {videoFilePath && timestampStrings.length !== 0 && (
         <div>
           {!playing && (
