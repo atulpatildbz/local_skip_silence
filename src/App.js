@@ -111,18 +111,18 @@ function App() {
       let obj = parseTimestamps(timestampStrings[j].trim());
 
       //if played is ahead of current timestamp's start and end, then move to next timestamp
-      if (playedMillis > obj.start - 50 && playedMillis > obj.end) {
+      if (playedMillis > obj.start - LOOKBEHIND_BUFFER_MILLIS && playedMillis > obj.end) {
         continue;
       }
       // if played is less than current timestamp's start, then the part is silent, speed up
-      else if (playedMillis < obj.start - 50) {
+      else if (playedMillis < obj.start - LOOKBEHIND_BUFFER_MILLIS) {
         setPlaybackRate(silenceSpeed);
         setCurrentSubtitle("");
         // i = j;
         break;
       }
       // if played is between timestamps start and end, someone is speaking, slow down
-      else if (playedMillis > obj.start - 50 && playedMillis < obj.end) {
+      else if (playedMillis > obj.start - LOOKBEHIND_BUFFER_MILLIS && playedMillis < obj.end) {
         setPlaybackRate(dialogueSpeed);
         setCurrentSubtitle(subtitleWords[j]);
         // i = j;
